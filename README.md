@@ -1,29 +1,58 @@
-# ManageEase
+# 📌 ManageEase
 
-ManageEase is a full-stack application for managing users and tasks with role-based access control. It provides a user-friendly interface for user registration, login, profile management, and task management.
+**ManageEase** is a full-stack **task & user management web application**.  
+It provides secure authentication, role-based authorization, and an intuitive UI for managing tasks and users.
 
-## Features
+---
 
-- User authentication (register, login, logout)
-- Role-based access control (Admin and Regular User)
-- User profile management
-- Task management with filtering, sorting, and search
+## 🚀 Features
+
+### 👤 User Management
+- Register, login, update profile, change password
+- Role-based access:
+  - **Admin:** manage all users & tasks
+  - **Regular User:** manage only own profile & tasks
+- Delete account with confirmation
+
+### ✅ Task Management
+- Create, update, delete, and view tasks
+- Tasks include: title, description, priority, status, due date, assigned user
+- Admins can assign tasks to any user
+- Search, filter, and sort tasks
+
+### 🔒 Security
+- JWT-based authentication
+- Secure password hashing (bcrypt)
+- Role-based access control
+- Production-ready configs (HTTPS, secure cookies, `.env` secrets)
+
+### 🎨 Frontend (React + Vite)
 - Responsive UI
+- Modern design with navigation bar
+- Task cards with priority/status highlights
+- Confirmation dialogs before dangerous actions
+- Mobile-friendly layout
 
-## Tech Stack
+### ⚡ Backend (Node.js + Express + MongoDB)
+- RESTful APIs for users and tasks
+- Mongoose for schema and data validation
+- Centralized error handling
+- Input validation
 
-### Frontend
-- React with Vite
-- React Router for navigation
-- Formik and Yup for form validation
-- Axios for API requests
-- React Toastify for notifications
+---
 
-### Backend
-- Node.js with Express
-- MongoDB for data persistence
-- JWT for authentication
-- Bcrypt for password hashing
-- Express Validator for input validation
+## 🛠️ Tech Stack
 
-## Project Structure
+**Frontend:** React (Vite), Axios, React Router, TailwindCSS / Material UI  
+**Backend:** Node.js, Express, MongoDB (Mongoose), JWT, bcrypt  
+**Other:** dotenv, nodemon  
+
+---
+
+## 📜 License
+
+MIT License © 2025 ManageEase
+
+---
+
+👉 Do you also want me to generate a **diagram of the architecture** (frontend ↔ backend ↔ database) to include in this README? That would make it more professional.
