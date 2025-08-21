@@ -1,11 +1,12 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+// Fix 1: Add proper typing for Vite environment variables
+const API_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:5000/api/v1';
 
 class ApiClient {
   private client: AxiosInstance;
-  private refreshingPromise: Promise<string> | null = null;
+  private refreshingPromise: Promise<string | null> | null = null;
 
   constructor() {
     this.client = axios.create({
@@ -14,7 +15,7 @@ class ApiClient {
       headers: {
         'Content-Type': 'application/json',
       },
-      withCredentials: true, // Important for cookies
+      withCredentials: true,
     });
 
     this.setupInterceptors();
@@ -43,6 +44,7 @@ class ApiClient {
       async (error: AxiosError) => {
         const originalRequest = error.config as any;
 
+        // Fix 2: Add proper null checking for error.response
         if (error.response?.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true;
 
@@ -62,8 +64,8 @@ class ApiClient {
           }
         }
 
-        // Handle other errors
-        if (error.response?.status >= 500) {
+        // Handle other errors with proper null checking
+        if (error.response?.status && error.response.status >= 500) {
           toast.error('Server error. Please try again later.');
         } else if (error.response?.status === 403) {
           toast.error('Access denied.');
@@ -76,6 +78,7 @@ class ApiClient {
     );
   }
 
+  // Fix 3: Update return type to handle null case properly
   private async refreshAccessToken(): Promise<string | null> {
     // Prevent multiple refresh calls
     if (this.refreshingPromise) {
@@ -120,18 +123,19 @@ class ApiClient {
       throw new Error('Token refresh failed');
     } catch (error) {
       console.error('❌ Token refresh failed:', error);
-      throw error;
+      return null; // Return null instead of throwing
     }
   }
 
   private handleLogout() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
     window.location.href = '/login';
   }
 
-  // HTTP Methods
-  async get<T = any>(url: string, params?: any): Promise<AxiosResponse<T>> {
+  // HTTP Methods with proper typing
+  async get<T = any>(url: string, params?: Record<string, any>): Promise<AxiosResponse<T>> {
     return this.client.get(url, { params });
   }
 

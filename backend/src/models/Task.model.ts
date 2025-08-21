@@ -1,17 +1,18 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface ITask extends Document {
-  _id: mongoose.Types.ObjectId; // Add explicit _id typing
+  _id: mongoose.Types.ObjectId;
   title: string;
   description?: string;
   priority: 'low' | 'medium' | 'high';
   status: 'active' | 'completed';
   dueDate?: Date;
-  userId: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId; // Task creator
+  assignedTo: mongoose.Types.ObjectId; // Task assignee (NEW FIELD)
   tags: string[];
   completedAt?: Date;
-  createdAt: Date; // Add timestamps
-  updatedAt: Date; // Add timestamps
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const taskSchema = new Schema<ITask>({
@@ -44,6 +45,12 @@ const taskSchema = new Schema<ITask>({
     ref: 'User',
     required: true
   },
+  // NEW FIELD: Task assignee (defaults to creator)
+  assignedTo: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   tags: [{
     type: String,
     trim: true,
@@ -53,16 +60,21 @@ const taskSchema = new Schema<ITask>({
     type: Date
   }
 }, {
-  timestamps: true, // This adds createdAt and updatedAt
+  timestamps: true,
   toJSON: {
     transform: (_, ret: any) => {
-      delete (ret as any).__v; // Use ret as any to avoid TypeScript error
+      delete (ret as any).__v;
       return ret;
     }
   }
 });
 
+// Auto-assign to creator if no assignee specified
 taskSchema.pre('save', function(next) {
+  if (this.isNew && !this.assignedTo) {
+    this.assignedTo = this.userId;
+  }
+  
   if (this.isModified('status')) {
     if (this.status === 'completed' && !this.completedAt) {
       this.completedAt = new Date();

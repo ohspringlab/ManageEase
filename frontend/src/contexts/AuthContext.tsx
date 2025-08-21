@@ -45,7 +45,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       const userData = await authService.getCurrentUser();
-      setUser(userData.data.user);
+      
+      // Fix Line 50: Use 'id' instead of '_id'
+      const transformedUser: User = {
+        id: userData.data.user.id,
+        firstName: userData.data.user.firstName,
+        lastName: userData.data.user.lastName,
+        email: userData.data.user.email,
+        createdAt: userData.data.user.createdAt
+      };
+      
+      setUser(transformedUser);
+      localStorage.setItem('user', JSON.stringify(transformedUser));
     } catch (error) {
       // Token might be expired, try to refresh
       try {
@@ -53,6 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } catch (refreshError) {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
         setUser(null);
       }
     } finally {
@@ -85,7 +97,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('refreshToken', response.data.refreshToken);
       
       if (response.data.user) {
-        setUser(response.data.user);
+        // Transform user data to match User interface
+        const transformedUser: User = {
+          id: response.data.user.id,
+          firstName: response.data.user.firstName,
+          lastName: response.data.user.lastName,
+          email: response.data.user.email,
+          createdAt: response.data.user.createdAt
+        };
+        
+        setUser(transformedUser);
+        localStorage.setItem('user', JSON.stringify(transformedUser));
       }
       
       console.log('✅ Tokens refreshed automatically');
@@ -101,7 +123,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       localStorage.setItem('accessToken', response.data.accessToken);
       localStorage.setItem('refreshToken', response.data.refreshToken);
-      setUser(response.data.user);
+      
+      // Fix Line 114: Transform user data to match User interface
+      const transformedUser: User = {
+        id: response.data.user.id,
+        firstName: response.data.user.firstName,
+        lastName: response.data.user.lastName,
+        email: response.data.user.email,
+        createdAt: response.data.user.createdAt
+      };
+      
+      setUser(transformedUser);
+      localStorage.setItem('user', JSON.stringify(transformedUser));
       
       toast.success(`Welcome back, ${response.data.user.firstName}! 👋`);
     } catch (error: any) {
@@ -135,6 +168,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } finally {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
       setUser(null);
       toast.success('Logged out successfully');
     }
@@ -142,7 +176,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateUser = (userData: Partial<User>) => {
     if (user) {
-      setUser({ ...user, ...userData });
+      const updatedUser = { ...user, ...userData };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
     }
   };
 

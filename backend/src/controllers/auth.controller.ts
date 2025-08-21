@@ -208,7 +208,7 @@ export class AuthController {
         success: true,
         data: {
           user: {
-            id: user._id.toString(),
+            id: user._id.toString(), // Convert _id to id
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,

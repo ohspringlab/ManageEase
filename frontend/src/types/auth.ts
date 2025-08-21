@@ -1,9 +1,9 @@
 export interface User {
-  id: string;
+  id: string; // Use 'id' not '_id'
   firstName: string;
   lastName: string;
   email: string;
-  createdAt: string;
+  createdAt?: string;
 }
 
 export interface LoginCredentials {
