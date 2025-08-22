@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "ManageEase Backend API",
   "main": "dist/server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "start": "node dist/server.js",
+    "prestart": "npm run build",
     "build": "tsc",
     "dev": "nodemon src/server.ts",
     "postinstall": "npm run build"
