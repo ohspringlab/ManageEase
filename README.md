@@ -44,7 +44,7 @@ A fully functional, modern task management system built with the MERN stack and 
 
 **Backend (.env):**
 ```env
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/manageease
+MONGODB_URI=mongodb://localhost:27017/manage-ease
 JWT_ACCESS_SECRET=your_32_character_secret_key_here
 JWT_REFRESH_SECRET=your_32_character_refresh_key_here
 CORS_ORIGIN=http://localhost:5173
