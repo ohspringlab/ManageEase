@@ -1,0 +1,18 @@
+{
+  "name": "manageease-complete-fullstack",
+  "version": "1.0.0",
+  "description": "Complete MERN stack task management application with TypeScript",
+  "scripts": {
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+    "install:all": "echo '📦 Installing backend dependencies...' && cd backend && npm install && echo '📦 Installing frontend dependencies...' && cd ../frontend && npm install && echo '✅ All dependencies installed successfully!'",
+    "build:all": "cd backend && npm run build && cd ../frontend && npm run build",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm run preview"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "keywords": ["mern-stack", "typescript", "task-management", "react", "nodejs", "express", "mongodb"],
+  "author": "ManageEase Team",
+  "license": "MIT"
+}
