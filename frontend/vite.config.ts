@@ -7,7 +7,7 @@ export default defineConfig({
   // Development server configuration
   server: {
     port: 5173,
-    host: true, // Allow external connections
+    host: true,
     proxy: {
       '/api': {
         target: 'http://localhost:5000',
@@ -17,10 +17,10 @@ export default defineConfig({
     }
   },
   
-  // Production build configuration
+  // Production build configuration (Fixed)
   build: {
     outDir: 'dist',
-    sourcemap: false, // Disable for production
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {
@@ -31,18 +31,11 @@ export default defineConfig({
         }
       }
     },
-    // Optimize for production
-    chunkSizeWarningLimit: 1000,
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true, // Remove console.logs in production
-        drop_debugger: true
-      }
-    }
+    // Remove terser configuration - use default esbuild minifier
+    chunkSizeWarningLimit: 1000
   },
   
-  // Preview server (for testing production build locally)
+  // Preview server
   preview: {
     port: 4173,
     host: true
