@@ -28,7 +28,6 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",
     "@types/express": "^4.17.23",
-    "@types/express-validator": "^3.0.0",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20.19.11",
     "nodemon": "^3.0.1",
