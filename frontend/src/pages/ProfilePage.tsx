@@ -298,7 +298,7 @@ export const ProfilePage: React.FC = () => {
                   <Activity className="h-5 w-5 text-blue-500 mr-3" />
                   <div>
                     <p className="text-sm text-gray-600">Last Activity</p>
-                    <p className="font-medium text-gray-900">{getRelativeTime(user.createdAt)}</p>
+                    <p className="font-medium text-gray-900">{getRelativeTime(user.lastActivity)}</p>
                   </div>
                 </div>
                 <div className="flex items-center">

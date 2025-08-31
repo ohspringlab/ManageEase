@@ -8,6 +8,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   isActive: boolean;
+  lastActivity: Date; // Add lastActivity
   createdAt: Date; // Add createdAt
   updatedAt: Date; // Add updatedAt
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -43,7 +44,11 @@ const userSchema = new Schema<IUser>({
   isActive: {
     type: Boolean,
     default: true
-  }
+  },
+  lastActivity: {
+    type: Date,
+    default: Date.now
+  },
 }, {
   timestamps: true, // This adds createdAt and updatedAt
   toJSON: {

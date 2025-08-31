@@ -10,7 +10,8 @@ export class UserController {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      createdAt: user.createdAt
+      createdAt: user.createdAt,
+      lastActivity: user.lastActivity
     };
   }
 

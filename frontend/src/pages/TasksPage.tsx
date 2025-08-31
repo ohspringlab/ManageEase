@@ -135,6 +135,7 @@ export const TasksPage: React.FC = () => {
       if (editingTask) {
         await updateTask(editingTask.id, taskData);
         setEditingTask(null);
+        setShowCreateModal(false);
       } else {
         await createTask(taskData);
         setShowCreateModal(false);

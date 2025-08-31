@@ -52,7 +52,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         firstName: userData.data.user.firstName,
         lastName: userData.data.user.lastName,
         email: userData.data.user.email,
-        createdAt: userData.data.user.createdAt
+        createdAt: userData.data.user.createdAt,
+        lastActivity: userData.data.user.lastActivity,
       };
       
       setUser(transformedUser);
@@ -103,7 +104,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           firstName: response.data.user.firstName,
           lastName: response.data.user.lastName,
           email: response.data.user.email,
-          createdAt: response.data.user.createdAt
+          createdAt: response.data.user.createdAt,
+          lastActivity: response.data.user.lastActivity,
         };
         
         setUser(transformedUser);
@@ -130,7 +132,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         firstName: response.data.user.firstName,
         lastName: response.data.user.lastName,
         email: response.data.user.email,
-        createdAt: response.data.user.createdAt
+        createdAt: response.data.user.createdAt,
+        lastActivity: response.data.user.lastActivity,
       };
       
       setUser(transformedUser);
