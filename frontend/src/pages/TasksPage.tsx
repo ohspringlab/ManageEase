@@ -261,8 +261,9 @@ export const TasksPage: React.FC = () => {
 
       {/* Filters */}
       <div className="card">
-        <div className="flex flex-col lg:flex-row gap-4">
-          <div className="flex-1">
+        <div className="flex flex-col space-y-4 lg:space-y-0">
+          {/* Search Bar - Full width on mobile, takes remaining space on desktop */}
+          <div className="w-full lg:mb-4">
             <div className="relative">
               <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
@@ -270,60 +271,91 @@ export const TasksPage: React.FC = () => {
                 placeholder="Search tasks..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="form-input pl-10"
+                className="form-input pl-10 w-full"
               />
             </div>
           </div>
-          <div className="flex flex-wrap gap-3">
-            {/* Fix 4: Create new filter objects instead of functions */}
-            <select
-              value={filters.view}
-              onChange={(e) => {
-                const newFilters: TaskFilters = {
-                  ...filters,
-                  view: e.target.value as 'all' | 'assigned' | 'created'
-                };
-                setFilters(newFilters);
-              }}
-              className="form-input min-w-32"
-            >
-              <option value="all">All Tasks</option>
-              <option value="assigned">Assigned to Me</option>
-              <option value="created">Created by Me</option>
-            </select>
+          
+          {/* Filter Dropdowns - Stack on mobile, horizontal on desktop */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+            <div className="flex items-center gap-2">
+              <Filter className="h-4 w-4 text-gray-400 hidden sm:block" />
+              <span className="text-sm font-medium text-gray-700 hidden sm:block">Filters:</span>
+            </div>
             
-            <select
-              value={filters.status}
-              onChange={(e) => {
-                const newFilters: TaskFilters = {
-                  ...filters,
-                  status: e.target.value as 'all' | 'active' | 'completed'
-                };
-                setFilters(newFilters);
-              }}
-              className="form-input min-w-28"
-            >
-              <option value="all">All Status</option>
-              <option value="active">Active</option>
-              <option value="completed">Completed</option>
-            </select>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:flex-1">
+              <div className="flex-1 sm:max-w-xs">
+                <select
+                  value={filters.view}
+                  onChange={(e) => {
+                    const newFilters: TaskFilters = {
+                      ...filters,
+                      view: e.target.value as 'all' | 'assigned' | 'created'
+                    };
+                    setFilters(newFilters);
+                  }}
+                  className="form-input w-full"
+                >
+                  <option value="all">All Tasks</option>
+                  <option value="assigned">Assigned to Me</option>
+                  <option value="created">Created by Me</option>
+                </select>
+              </div>
+              
+              <div className="flex-1 sm:max-w-xs">
+                <select
+                  value={filters.status}
+                  onChange={(e) => {
+                    const newFilters: TaskFilters = {
+                      ...filters,
+                      status: e.target.value as 'all' | 'active' | 'completed'
+                    };
+                    setFilters(newFilters);
+                  }}
+                  className="form-input w-full"
+                >
+                  <option value="all">All Status</option>
+                  <option value="active">Active</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+              
+              <div className="flex-1 sm:max-w-xs">
+                <select
+                  value={filters.priority}
+                  onChange={(e) => {
+                    const newFilters: TaskFilters = {
+                      ...filters,
+                      priority: e.target.value as 'all' | 'low' | 'medium' | 'high'
+                    };
+                    setFilters(newFilters);
+                  }}
+                  className="form-input w-full"
+                >
+                  <option value="all">All Priority</option>
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+            </div>
             
-            <select
-              value={filters.priority}
-              onChange={(e) => {
+            {/* Clear Filters Button */}
+            <button
+              onClick={() => {
                 const newFilters: TaskFilters = {
-                  ...filters,
-                  priority: e.target.value as 'all' | 'low' | 'medium' | 'high'
+                  view: 'all',
+                  status: 'all',
+                  priority: 'all',
+                  search: ''
                 };
                 setFilters(newFilters);
+                setSearchTerm('');
               }}
-              className="form-input min-w-28"
+              className="btn-secondary btn-sm whitespace-nowrap"
             >
-              <option value="all">All Priority</option>
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
-            </select>
+              Clear All
+            </button>
           </div>
         </div>
       </div>
