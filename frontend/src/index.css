@@ -24,3 +24,35 @@
 .spinner {
   @apply inline-block w-4 h-4 border-2 border-current border-r-transparent rounded-full animate-spin;
 }
+
+/* Add line-clamp utility for text truncation */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Mobile specific improvements */
+@media (max-width: 640px) {
+  .task-card {
+    @apply p-3;
+  }
+  
+  /* Ensure proper spacing and sizing on mobile */
+  .task-list .space-y-4 > * + * {
+    margin-top: 0.75rem;
+  }
+  
+  /* Improve button touch targets */
+  button[title] {
+    @apply min-w-[44px] min-h-[44px];
+  }
+}
