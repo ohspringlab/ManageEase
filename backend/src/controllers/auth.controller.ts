@@ -54,7 +54,8 @@ export class AuthController {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            createdAt: user.createdAt
+            createdAt: user.createdAt,
+            lastActivity: user.lastActivity
           }
         }
       });
@@ -99,6 +100,12 @@ export class AuthController {
         });
       }
 
+      const lastActivity = new Date();
+      await User.findByIdAndUpdate(user._id, { 
+        lastActivity,
+      });
+      user.lastActivity = lastActivity;
+
       // Use AuthController.generateTokens() instead of this.generateTokens()
       const { accessToken, refreshToken } = AuthController.generateTokens(user._id.toString());
 
@@ -118,7 +125,9 @@ export class AuthController {
             id: user._id.toString(),
             firstName: user.firstName,
             lastName: user.lastName,
-            email: user.email
+            email: user.email,
+            createdAt: user.createdAt,
+            lastActivity: user.lastActivity
           },
           accessToken,
           refreshToken
@@ -131,7 +140,10 @@ export class AuthController {
 
   static async refreshToken(req: Request, res: Response, next: NextFunction) {
     try {
-      const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
+      const refreshToken =
+        req.cookies?.refreshToken ||
+        req.body?.refreshToken ||
+        req.headers?.authorization?.replace("Bearer ", "");
 
       if (!refreshToken) {
         return res.status(401).json({
@@ -171,7 +183,9 @@ export class AuthController {
               id: user._id.toString(),
               firstName: user.firstName,
               lastName: user.lastName,
-              email: user.email
+              email: user.email,
+              createdAt: user.createdAt,
+              lastActivity: user.lastActivity
             }
           }
         });
@@ -212,7 +226,8 @@ export class AuthController {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            createdAt: user.createdAt
+            createdAt: user.createdAt,
+            lastActivity: user.lastActivity
           }
         }
       });

@@ -8,7 +8,6 @@
   },
   "scripts": {
     "start": "node dist/server.js",
-    "prestart": "npm run build",
     "build": "tsc",
     "dev": "nodemon src/server.ts",
     "postinstall": "npm run build"

@@ -135,6 +135,7 @@ export const TasksPage: React.FC = () => {
       if (editingTask) {
         await updateTask(editingTask.id, taskData);
         setEditingTask(null);
+        setShowCreateModal(false);
       } else {
         await createTask(taskData);
         setShowCreateModal(false);
@@ -260,8 +261,9 @@ export const TasksPage: React.FC = () => {
 
       {/* Filters */}
       <div className="card">
-        <div className="flex flex-col lg:flex-row gap-4">
-          <div className="flex-1">
+        <div className="flex flex-col space-y-4 lg:space-y-0">
+          {/* Search Bar - Full width on mobile, takes remaining space on desktop */}
+          <div className="w-full lg:mb-4">
             <div className="relative">
               <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
@@ -269,60 +271,91 @@ export const TasksPage: React.FC = () => {
                 placeholder="Search tasks..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="form-input pl-10"
+                className="form-input pl-10 w-full"
               />
             </div>
           </div>
-          <div className="flex flex-wrap gap-3">
-            {/* Fix 4: Create new filter objects instead of functions */}
-            <select
-              value={filters.view}
-              onChange={(e) => {
-                const newFilters: TaskFilters = {
-                  ...filters,
-                  view: e.target.value as 'all' | 'assigned' | 'created'
-                };
-                setFilters(newFilters);
-              }}
-              className="form-input min-w-32"
-            >
-              <option value="all">All Tasks</option>
-              <option value="assigned">Assigned to Me</option>
-              <option value="created">Created by Me</option>
-            </select>
+          
+          {/* Filter Dropdowns - Stack on mobile, horizontal on desktop */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+            <div className="flex items-center gap-2">
+              <Filter className="h-4 w-4 text-gray-400 hidden sm:block" />
+              <span className="text-sm font-medium text-gray-700 hidden sm:block">Filters:</span>
+            </div>
             
-            <select
-              value={filters.status}
-              onChange={(e) => {
-                const newFilters: TaskFilters = {
-                  ...filters,
-                  status: e.target.value as 'all' | 'active' | 'completed'
-                };
-                setFilters(newFilters);
-              }}
-              className="form-input min-w-28"
-            >
-              <option value="all">All Status</option>
-              <option value="active">Active</option>
-              <option value="completed">Completed</option>
-            </select>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:flex-1">
+              <div className="flex-1 sm:max-w-xs">
+                <select
+                  value={filters.view}
+                  onChange={(e) => {
+                    const newFilters: TaskFilters = {
+                      ...filters,
+                      view: e.target.value as 'all' | 'assigned' | 'created'
+                    };
+                    setFilters(newFilters);
+                  }}
+                  className="form-input w-full"
+                >
+                  <option value="all">All Tasks</option>
+                  <option value="assigned">Assigned to Me</option>
+                  <option value="created">Created by Me</option>
+                </select>
+              </div>
+              
+              <div className="flex-1 sm:max-w-xs">
+                <select
+                  value={filters.status}
+                  onChange={(e) => {
+                    const newFilters: TaskFilters = {
+                      ...filters,
+                      status: e.target.value as 'all' | 'active' | 'completed'
+                    };
+                    setFilters(newFilters);
+                  }}
+                  className="form-input w-full"
+                >
+                  <option value="all">All Status</option>
+                  <option value="active">Active</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+              
+              <div className="flex-1 sm:max-w-xs">
+                <select
+                  value={filters.priority}
+                  onChange={(e) => {
+                    const newFilters: TaskFilters = {
+                      ...filters,
+                      priority: e.target.value as 'all' | 'low' | 'medium' | 'high'
+                    };
+                    setFilters(newFilters);
+                  }}
+                  className="form-input w-full"
+                >
+                  <option value="all">All Priority</option>
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+            </div>
             
-            <select
-              value={filters.priority}
-              onChange={(e) => {
+            {/* Clear Filters Button */}
+            <button
+              onClick={() => {
                 const newFilters: TaskFilters = {
-                  ...filters,
-                  priority: e.target.value as 'all' | 'low' | 'medium' | 'high'
+                  view: 'all',
+                  status: 'all',
+                  priority: 'all',
+                  search: ''
                 };
                 setFilters(newFilters);
+                setSearchTerm('');
               }}
-              className="form-input min-w-28"
+              className="btn-secondary btn-sm whitespace-nowrap"
             >
-              <option value="all">All Priority</option>
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
-            </select>
+              Clear All
+            </button>
           </div>
         </div>
       </div>
@@ -396,7 +429,7 @@ export const TasksPage: React.FC = () => {
             </button>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="task-list space-y-3 sm:space-y-4">
             {tasks.map((task) => {
               if (!task || !task.id) {
                 return null;
@@ -405,103 +438,135 @@ export const TasksPage: React.FC = () => {
               return (
                 <div
                   key={task.id}
-                  className={`p-4 border rounded-lg transition-colors ${
+                  className={`p-3 sm:p-4 border rounded-lg transition-colors ${
                     task.status === 'completed' ? 'bg-gray-50 opacity-75' : 'bg-white hover:bg-gray-50'
                   }`}
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start space-x-3 flex-1">
-                      {canUpdateStatus(task) ? (
-                        <button
-                          onClick={() => handleStatusToggle(task.id, task.status)}
-                          className={`mt-1 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+                  {/* Mobile-optimized layout */}
+                  <div className="space-y-3">
+                    {/* Header Row - Title and Actions */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-start space-x-2 flex-1 min-w-0">
+                        {/* Checkbox */}
+                        {canUpdateStatus(task) ? (
+                          <button
+                            onClick={() => handleStatusToggle(task.id, task.status)}
+                            className={`mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors flex-shrink-0 ${
+                              task.status === 'completed'
+                                ? 'bg-blue-600 border-blue-600'
+                                : 'border-gray-300 hover:border-blue-600'
+                            }`}
+                          >
+                            {task.status === 'completed' && (
+                              <CheckSquare className="h-3 w-3 text-white" />
+                            )}
+                          </button>
+                        ) : (
+                          <div className={`mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
                             task.status === 'completed'
                               ? 'bg-blue-600 border-blue-600'
-                              : 'border-gray-300 hover:border-blue-600'
-                          }`}
-                        >
-                          {task.status === 'completed' && (
-                            <CheckSquare className="h-3 w-3 text-white" />
-                          )}
-                        </button>
-                      ) : (
-                        <div className={`mt-1 w-5 h-5 rounded border-2 flex items-center justify-center ${
-                          task.status === 'completed'
-                            ? 'bg-blue-600 border-blue-600'
-                            : 'border-gray-300'
+                              : 'border-gray-300'
+                          }`}>
+                            {task.status === 'completed' && (
+                              <CheckSquare className="h-3 w-3 text-white" />
+                            )}
+                          </div>
+                        )}
+                        
+                        {/* Title */}
+                        <div className="flex-1 min-w-0">
+                          <h3 className={`font-medium text-sm sm:text-base break-words ${
+                            task.status === 'completed' ? 'line-through text-gray-500' : 'text-gray-900'
+                          }`}>
+                            {task.title || 'Untitled Task'}
+                          </h3>
+                        </div>
+                      </div>
+                      
+                      {/* Action Buttons - Fixed position */}
+                      {canEditTask(task) && (
+                        <div className="flex items-center gap-1 flex-shrink-0 ml-2">
+                          <button
+                            onClick={() => handleEdit(task)}
+                            className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                            title="Edit task"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(task.id)}
+                            className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                            title="Delete task"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Description */}
+                    {task.description && (
+                      <div className="ml-7">
+                        <p className="text-xs sm:text-sm text-gray-600 break-words line-clamp-2">
+                          {task.description}
+                        </p>
+                      </div>
+                    )}
+                    
+                    {/* Meta Information - Mobile optimized */}
+                    <div className="ml-7 space-y-2">
+                      {/* Priority and Status Row */}
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(task.priority || 'medium')}`}>
+                          {task.priority || 'medium'}
+                        </span>
+                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                          task.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
                         }`}>
-                          {task.status === 'completed' && (
-                            <CheckSquare className="h-3 w-3 text-white" />
+                          {task.status}
+                        </span>
+                      </div>
+
+                      {/* Tags Row - Mobile friendly */}
+                      {Array.isArray(task.tags) && task.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {task.tags.slice(0, 3).map((tag: string, index: number) => (
+                            <span key={index} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                              {tag}
+                            </span>
+                          ))}
+                          {task.tags.length > 3 && (
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-600">
+                              +{task.tags.length - 3}
+                            </span>
                           )}
                         </div>
                       )}
-                      
-                      <div className="flex-1">
-                        <h3 className={`font-medium ${
-                          task.status === 'completed' ? 'line-through text-gray-500' : 'text-gray-900'
-                        }`}>
-                          {task.title || 'Untitled Task'}
-                        </h3>
-                        {task.description && (
-                          <p className="text-sm text-gray-600 mt-1">{task.description}</p>
+
+                      {/* Bottom Row - Due Date and Assignment */}
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                        {/* Due Date */}
+                        {task.dueDate && (
+                          <div className="flex items-center gap-1 text-xs text-gray-500">
+                            <Calendar className="h-3 w-3 flex-shrink-0" />
+                            <span className="truncate">
+                              {new Date(task.dueDate).toLocaleDateString()}
+                            </span>
+                          </div>
                         )}
                         
-                        <div className="flex items-center justify-between mt-3">
-                          <div className="flex items-center gap-3">
-                            <span className={`badge ${getPriorityColor(task.priority || 'medium')}`}>
-                              {task.priority || 'medium'}
-                            </span>
-                            {task.dueDate && (
-                              <span className="text-xs text-gray-500 flex items-center">
-                                <Calendar className="h-3 w-3 mr-1" />
-                                {new Date(task.dueDate).toLocaleDateString()}
-                              </span>
-                            )}
-                            {Array.isArray(task.tags) && task.tags.length > 0 && (
-                              <div className="flex gap-1">
-                                {task.tags.slice(0, 2).map((tag: string, index: number) => (
-                                  <span key={index} className="badge badge-gray">
-                                    {tag}
-                                  </span>
-                                ))}
-                                {task.tags.length > 2 && (
-                                  <span className="text-xs text-gray-500">
-                                    +{task.tags.length - 2}
-                                  </span>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                          
-                          {task.userId && task.assignedTo && (
+                        {/* Assignment Badge */}
+                        {task.userId && task.assignedTo && (
+                          <div className="flex-shrink-0">
                             <TaskAssignmentBadge 
                               creator={task.userId} 
                               assignee={task.assignedTo}
                               showCreator={task.userId.id !== task.assignedTo.id}
                             />
-                          )}
-                        </div>
+                          </div>
+                        )}
                       </div>
                     </div>
-                    
-                    {canEditTask(task) && (
-                      <div className="flex items-center gap-2 ml-4">
-                        <button
-                          onClick={() => handleEdit(task)}
-                          className="p-1 text-gray-400 hover:text-blue-600"
-                          title="Edit task"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(task.id)}
-                          className="p-1 text-gray-400 hover:text-red-600"
-                          title="Delete task"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    )}
                   </div>
                 </div>
               );
