@@ -98,10 +98,6 @@ export const RegisterPage: React.FC = () => {
                 <input
                   {...register('lastName', {
                     required: 'Last name is required',
-                    minLength: {
-                      value: 2,
-                      message: 'Last name must be at least 2 characters'
-                    }
                   })}
                   type="text"
                   className="form-input"
