@@ -192,8 +192,7 @@ export const ProfilePage: React.FC = () => {
                 <label className="form-label">Last Name *</label>
                 <input
                   {...register('lastName', { 
-                    required: 'Last name is required',
-                    minLength: { value: 2, message: 'Last name must be at least 2 characters' }
+                    required: 'Last name is required'
                   })}
                   type="text"
                   className="form-input"
