@@ -135,8 +135,8 @@ class ApiClient {
   }
 
   // HTTP Methods with proper typing
-  async get<T = any>(url: string, params?: Record<string, any>): Promise<AxiosResponse<T>> {
-    return this.client.get(url, { params });
+  async get<T = any>(url: string): Promise<AxiosResponse<T>> {
+    return this.client.get(url);
   }
 
   async post<T = any>(url: string, data?: any): Promise<AxiosResponse<T>> {
