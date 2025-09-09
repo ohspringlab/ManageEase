@@ -4,12 +4,15 @@ import { TaskUser } from '../types/task';
 
 class UserService {
   async getUsers(search?: string): Promise<ApiResponse<{ users: TaskUser[] }>> {
-    const params: any = {};
+    const searchParams = new URLSearchParams();
     if (search) {
-      params.search = search;
+      searchParams.append('search', search);
     }
+
+    const queryString = searchParams.toString();
+    const url = queryString ? `/users?${queryString}` : '/users';
     
-    const response = await apiClient.get('/users', { params });
+    const response = await apiClient.get(url);
     return response.data;
   }
 
